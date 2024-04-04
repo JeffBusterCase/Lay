@@ -33,12 +33,12 @@ table(
 
 table(
     new Lay(list)
-        .group(g => ({Sexo: g.Sexo}),
-            s => ({
-                'Genero do Aluno': s.key.Sexo === 'M' ? 'Masculino' : 'Feminino',
-                'Maior Idade': s.max(v => v.Idade),
-                'Nota Media': s.avg(v => v.Nota)
-            })
-        )
+        .groupBy(g => ({Sexo: g.Sexo}))
+        .select(s => ({
+            Sexo: s.key.Sexo,
+            'Genero do Aluno': s.key.Sexo === 'M' ? 'Masculino' : 'Feminino',
+            'Maior Idade': s.max(v => v.Idade),
+            'Nota Media': s.avg(v => v.Nota)
+        }))
 )
 ```
