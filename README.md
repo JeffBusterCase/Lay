@@ -41,7 +41,7 @@ table(
 ```
 
 ## Supported functions
-\* Supports predicated as param <br/>
+\* Supports predicate as param <br/>
 * `max`
 * `min`
 * `avg`
