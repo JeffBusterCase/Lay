@@ -42,13 +42,22 @@ class Lay {
             return this._grupo.length > 0 ? this._grupo[this._grupo.length-1] : null;
         }
     }
-    groupBy(groupBy, selectField) {
+
+    groupBy(groupBy) {
         const listOfObjects = this._grupo;
-        Lay.group(listOfObjects, groupBy, selectField);
+        const ungroupedKeys = listOfObjects.map(o => Object.values(groupBy(o)).join(','));
+        const keys = ungroupedKeys.filter((f, i) => ungroupedKeys.indexOf(f) === i);
+        const final = keys.map(key => {
+            let grupo = listOfObjects.filter(f => key === Object.values(groupBy(f)).join(','));
+            let chave = [grupo[0]].map(groupBy)[0];
+            let select = new Lay(grupo, chave);
+            return select;
+        });
+        return new Lay(final);
     }
 
     static group(listOfObjects, groupBy, selectField) {
-      const ungroupedKeys = listOfObjects.map(o => Object.values(groupBy(o)).join(','));
+        const ungroupedKeys = listOfObjects.map(o => Object.values(groupBy(o)).join(','));
         const keys = ungroupedKeys.filter((f, i) => ungroupedKeys.indexOf(f) === i);
         const final = keys.map(key => {
             let grupo = listOfObjects.filter(f => key === Object.values(groupBy(f)).join(','));
@@ -57,5 +66,9 @@ class Lay {
             return { ...selectField(select) };
         });
         return final;
+    }
+
+    select(mapF) {
+        return this._grupo.map(mapF);
     }
 }
