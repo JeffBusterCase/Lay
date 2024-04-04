@@ -1,15 +1,9 @@
 # Lay
 Lay - Yet another Linq (functionality in JavaScript)
-
-
+Say bye bye for long lines of code with for,foreach and if/eles only to get that desired grouped data.
+### Usage
 ```javascript
-
-// Usage below
-const print = console.log;
 const table = console.table;
-const clear = console.clear;
-
-clear()
 
 let list = [
   {Id: 0, Nome: 'Jeff', Idade: 10, Sexo: 'M', Nota: 100.0},
@@ -19,21 +13,24 @@ let list = [
   {Id: 4, Nome: 'Dakota', Idade: 17, Sexo: 'F', Nota: 85.5},
 ];
 
+// Usage as static method and unique function for grouping and selecting
 table(
     Lay.group(
         list,
         g => ({Sexo: g.Sexo}),
         s => ({
-            MaiorIdade: s.max(v => v.Idade),
-            NotaMedia: s.avg(v => v.Nota)
+             Sexo: s.key.Sexo,
+            'Genero do Aluno': s.key.Sexo === 'M' ? 'Masculino' : 'Feminino',
+            'Maior Idade': s.max(v => v.Idade),
+            'Nota Media': s.avg(v => v.Nota)
         })
     )
 )
 
-
+// Usage with instance example
 table(
     new Lay(list)
-        .groupBy(g => ({Sexo: g.Sexo}))
+        .groupBy(g => ({Sexo: g.Sexo})) /* returns a Lay(listOfLay)*/
         .select(s => ({
             Sexo: s.key.Sexo,
             'Genero do Aluno': s.key.Sexo === 'M' ? 'Masculino' : 'Feminino',
@@ -42,3 +39,20 @@ table(
         }))
 )
 ```
+
+## Supported functions
+\* Supports predicated as param <br/>
+* `max`
+* `min`
+* `avg`
+* `toList`
+* `sum`
+* `count`/`length` \*
+* `filter`/`where`
+* `first` \*
+* `firstOrDefault` \*
+* `last` \*
+* `lastOrDefault` \*
+* `groupBy`
+* `select`
+* `group`(static)
