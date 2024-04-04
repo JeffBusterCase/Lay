@@ -38,6 +38,9 @@ table(
             'Nota Media': s.avg(v => v.Nota)
         }))
 )
+
+// Simple usage
+print(`Nota media ${new Lay(list).avg(v => v.Nota)}`)
 ```
 
 ## Supported functions
