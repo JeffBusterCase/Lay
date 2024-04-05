@@ -6,38 +6,22 @@ Say bye bye for long lines of code with for,foreach and if/eles only to get that
 const table = console.table;
 
 let list = [
-  {Id: 0, Nome: 'Jeff', Idade: 10, Sexo: 'M', Nota: 100.0},
-  {Id: 1, Nome: 'Bruno', Idade: 5, Sexo: 'M', Nota: 52.5},
-  {Id: 2, Nome: 'Luis', Idade: 19, Sexo: 'M', Nota: 35.0},
-  {Id: 3, Nome: 'Alex', Idade: 12, Sexo: 'F', Nota: 9.5},
-  {Id: 4, Nome: 'Dakota', Idade: 17, Sexo: 'F', Nota: 85.5},
+  {Id: 0, Nome: 'Jeff', Idade: 10, Sexo: 'M', Nota: 100.0, AnoEscolar: 8},
+  {Id: 1, Nome: 'Bruno', Idade: 5, Sexo: 'M', Nota: 52.5, AnoEscolar: 7},
+  {Id: 2, Nome: 'Luis', Idade: 19, Sexo: 'M', Nota: 35.0, AnoEscolar: 7},
+  {Id: 3, Nome: 'Alex', Idade: 12, Sexo: 'F', Nota: 9.5, AnoEscolar: 6},
+  {Id: 4, Nome: 'Dakota', Idade: 17, Sexo: 'F', Nota: 85.5, AnoEscolar: 8},
 ];
 
-// Usage as static method and unique function for grouping and selecting
 table(
-    Lay.group(
-        list,
-        g => ({Sexo: g.Sexo}),
-        s => ({
-             Sexo: s.key.Sexo,
-            'Genero do Aluno': s.key.Sexo === 'M' ? 'Masculino' : 'Feminino',
-            'Maior Idade': s.max(v => v.Idade),
-            'Nota Media': s.avg(v => v.Nota)
-        })
-    )
-)
-
-// Usage with instance example
-table(
-    new Lay(list)
-        .groupBy(g => ({Sexo: g.Sexo})) /* returns a Lay(listOfLay)*/
-        .select(s => ({
-            Sexo: s.key.Sexo,
-            'Genero do Aluno': s.key.Sexo === 'M' ? 'Masculino' : 'Feminino',
-            'Maior Idade': s.max(v => v.Idade),
-            'Nota Media': s.avg(v => v.Nota)
-        }))
-)
+    new Lay(list).filter(f => f.Sexo === 'M')
+    .groupBy(g => ({AnoEscolar: g.AnoEscolar}))
+    .select(s => ({
+        AnoEscolar: s.key.AnoEscolar,
+        NotaMedia: s.avg(v => v.Nota)
+    }))
+    .toList()
+);
 
 // Simple usage
 print(`Nota media ${new Lay(list).avg(v => v.Nota)}`)
@@ -59,3 +43,5 @@ print(`Nota media ${new Lay(list).avg(v => v.Nota)}`)
 * `groupBy`
 * `select`
 * `group`(static)
+* `orderBy`
+* `orderByDescending`
