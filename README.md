@@ -14,7 +14,8 @@ let list = [
 ];
 
 table(
-    new Lay(list).filter(f => f.Sexo === 'M')
+    new Lay(list)
+    .where(f => f.Sexo === 'M')
     .groupBy(g => ({AnoEscolar: g.AnoEscolar}))
     .select(s => ({
         AnoEscolar: s.key.AnoEscolar,
