@@ -11,10 +11,10 @@ class Lay {
         if(f) return this.filter(f).length;
         else return this._grupo.length;
     }
-    sum(mapF) { return this._grupo.map(mapF).reduce((a,v) => a+=v) }
-    min(mapF) { return Math.min(...this._grupo.map(mapF)) }
-    max(mapF) { return Math.max(...this._grupo.map(mapF)) }
-    avg(mapF) { return this.sum(mapF)/this.length() }
+    sum(mapF) { return this._grupo.map(mapF??(v=>v)).reduce((a,v) => a+=v) }
+    min(mapF) { return Math.min(...this._grupo.map(mapF??(v=>v))) }
+    max(mapF) { return Math.max(...this._grupo.map(mapF??(v=>v))) }
+    avg(mapF) { return this.sum(mapF??(v=>v))/this.length() }
     first(f) { 
         if(f) return this.filter(f)[0];
         else return this._grupo[0];
@@ -59,6 +59,7 @@ class Lay {
     static group(listOfObjects, groupBy, selectField) {
         const ungroupedKeys = listOfObjects.map(o => Object.values(groupBy(o)).join(','));
         const keys = ungroupedKeys.filter((f, i) => ungroupedKeys.indexOf(f) === i);
+        selectField ??= (v=>v.key);
         const final = keys.map(key => {
             let grupo = listOfObjects.filter(f => key === Object.values(groupBy(f)).join(','));
             let chave = [grupo[0]].map(groupBy)[0];
