@@ -8,13 +8,13 @@ class Lay {
         return this.filter(f)
     }
     filter(f) {
-        return this._grupo.filter(f)
+        return new Lay(this._grupo.filter(f));
     }
     toList() {
-        return [...this._grupo]
+        return [...this._grupo];
     }
     count(f) {
-        return this.length(f)
+        return this.length(f);
     }
     length(f) {
         if(f) return this.filter(f).length;
@@ -46,6 +46,30 @@ class Lay {
             return filtered.length > 0 ? filtered[0] : null; 
         }
         else return this._grupo.length > 0 ? this._grupo[0] : null;
+    }
+    orderBy(mapF) {
+        if(this._grupo.length === 0) return new Lay(this._grupo);
+        mapF = mapF === null ? this.defmapf : mapF;
+        if(typeof(this._grupo.map(mapF)[0]) === 'string') {
+            let fin = this._grupo.toSorted((a,b) => mapF(a===null?'':a).localeCompare(mapF(b)));
+            return new Lay(fin);
+        }
+        else {
+            let fin = this._grupo.toSorted((a,b) => mapF(a===null?-1:a)-(mapF(b===null?-1:b)));
+            return new Lay(fin);
+        }
+    }
+    orderByDescending(mapF) {
+        if(this._grupo.length === 0) return new Lay(this._grupo);
+        mapF = mapF === null ? this.defmapf : mapF;
+        if(typeof(this._grupo.map(mapF)[0]) === 'string') {
+            let fin = this._grupo.toSorted((b,a) => mapF(a===null?'':a).localeCompare(mapF(b)));
+            return new Lay(fin);
+        }
+        else {
+            let fin = this._grupo.toSorted((b,a) => mapF(a===null?-1:a)-(mapF(b===null?-1:b)));
+            return new Lay(fin);
+        }
     }
     last(f) {
         if(f) {
@@ -89,6 +113,10 @@ class Lay {
     }
 
     select(mapF) {
-        return this._grupo.map(mapF);
+        return new Lay(this._grupo.map(mapF));
+    }
+
+    table() {
+        if(console) console.table(this._grupo);
     }
 }
