@@ -1,11 +1,13 @@
 # Lay
 Lay - Yet another Linq (functionality in JavaScript)
-Say bye bye for long lines of code with for,foreach and if/eles only to get that desired grouped data.
+
+It provides data manipulation easier and similar to how C# Linq syntax is.
+
 ### Usage
 ```javascript
 const table = console.table;
 
-let list = [
+const list = [
   {Id: 0, Nome: 'Jeff', Idade: 10, Sexo: 'M', Nota: 100.0, AnoEscolar: 8},
   {Id: 1, Nome: 'Bruno', Idade: 5, Sexo: 'M', Nota: 52.5, AnoEscolar: 7},
   {Id: 2, Nome: 'Luis', Idade: 19, Sexo: 'M', Nota: 35.0, AnoEscolar: 7},
