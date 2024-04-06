@@ -142,21 +142,10 @@ class Lay {
     }
 
     static group(listOfObjects, groupBy, selectField) {
-        const prefinal = {};
-        for(var item of listOfObjects) {
-            let grp = groupBy(item);
-            let key = typeof(grp) === 'object' ? Object.values(grp).join(',') : grp;
-            if(!(key in prefinal)) prefinal[key] = [item];
-            else prefinal[key].push(item);
-        }
-
-        const final = [];
-        for(var key of Object.keys(prefinal)) {
-            let chave = groupBy(prefinal[key][0]);
-            final.push(new Lay(prefinal[key], chave))
-        }
-        
-        return new Lay(final).select(selectField).toList();
+        return new Lay(listOfObjects)
+            .groupBy(groupBy)
+            .select(selectField)
+            .toList();
     }
 
     table() {
