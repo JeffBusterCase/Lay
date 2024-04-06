@@ -34,7 +34,7 @@ print(`Nota media ${new Lay(list).avg(v => v.Nota)}`)
 \* Supports predicate as param <br/>
 * `max`
 * `min`
-* `avg`
+* `avg/average`
 * `toList`
 * `sum`
 * `count`/`length` \*
