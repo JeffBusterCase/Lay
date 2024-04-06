@@ -11,7 +11,7 @@ class Lay {
         return new Lay(this._grupo.filter(f));
     }
     toList() {
-        return this.toList();
+        return this.toArray();
     }
     toArray() {
         return [...this._grupo];
