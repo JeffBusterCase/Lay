@@ -11,6 +11,9 @@ class Lay {
         return new Lay(this._grupo.filter(f));
     }
     toList() {
+        return this.toList();
+    }
+    toArray() {
         return [...this._grupo];
     }
     count(f) {
@@ -53,6 +56,9 @@ class Lay {
             if(vmax < v) vmax = v;
         }
         return vmax;
+    }
+    average(mapF) {
+        return this.avg(mapF);
     }
     avg(mapF) {
         if(this._grupo.length === 0) throw new Error('Empty list');
@@ -110,7 +116,12 @@ class Lay {
         }
         else return this._grupo.length > 0 ? this._grupo[this._grupo.length-1] : null;
     }
-
+    select(mapF) {
+        return new Lay(this._map(this._grupo,mapF));
+    }
+    selectMany(mapF) {
+        return new Lay(this._map(this._grupo,mapF).reduce((acc, arr) => acc.concat(arr), []));
+    }
     groupBy(groupBy) {
         const listOfObjects = this._grupo;
         const prefinal = {};
@@ -142,10 +153,6 @@ class Lay {
         }
         
         return new Lay(final).select(selectField).toList();
-    }
-
-    select(mapF) {
-        return new Lay(this._map(this._grupo,mapF));
     }
 
     table() {
