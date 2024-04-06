@@ -18,9 +18,9 @@ const list = [
 table(
     new Lay(list)
     .where(f => f.Sexo === 'M')
-    .groupBy(g => ({AnoEscolar: g.AnoEscolar}))
+    .groupBy(g => ({AnoEscolar: g.AnoEscolar})) // or ´g => g.AnoEscolar´
     .select(s => ({
-        AnoEscolar: s.key.AnoEscolar,
+        AnoEscolar: s.key.AnoEscolar, // if ´g => g.AnoEcolar´, it would be ´s.key´
         NotaMedia: s.avg(v => v.Nota)
     }))
     .toList()
@@ -48,3 +48,4 @@ print(`Nota media ${new Lay(list).avg(v => v.Nota)}`)
 * `group`(static)
 * `orderBy`
 * `orderByDescending`
+* `selectMany`
