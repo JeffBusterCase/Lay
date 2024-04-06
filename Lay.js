@@ -20,23 +20,47 @@ class Lay {
         if(f) return this.filter(f).length;
         else return this._grupo.length;
     }
+    _map(grupo, m) {
+        return Lay._map(grupo, m);
+    }
+    static _map(grupo, m) {
+        const new_list = [];
+        for(var v of grupo) {
+            new_list.push(m(v));
+        }
+        return new_list;
+    }
     sum(mapF) {
         mapF = mapF === null ? this.defmapf : mapF;
-        return this._grupo.map(mapF).reduce((a,v) => a+=v);
+        return this._map(this._grupo, mapF).reduce((a,v) => a+=v);
     }
     min(mapF) {
+        if(this._grupo.length === 0) throw new Error('Empty list');
         mapF = mapF === null ? this.defmapf : mapF;
-        return Math.min(...this._grupo.map(mapF));
+        let vmin = mapF(this._grupo[0]);
+        for(var i=1;i<this._grupo.length;i++) {
+            let v = mapF(this._grupo[i]);
+            if(vmin > v) vmin = v;
+        }
+        return vmin;
     }
     max(mapF) {
+        if(this._grupo.length === 0) throw new Error('Empty list');
         mapF = mapF === null ? this.defmapf : mapF;
-        return Math.max(...this._grupo.map(mapF));
+        let vmax = mapF(this._grupo[0]);
+        for(var i=1;i<this._grupo.length;i++) {
+            let v = mapF(this._grupo[i]);
+            if(vmax < v) vmax = v;
+        }
+        return vmax;
     }
     avg(mapF) {
+        if(this._grupo.length === 0) throw new Error('Empty list');
         mapF = mapF === null ? this.defmapf : mapF;
         return this.sum(mapF)/this.length();
     }
-    first(f) { 
+    first(f) {
+        if(this._grupo.length === 0) throw new Error('Empty list');
         if(f) return this.filter(f)[0];
         else return this._grupo[0];
     }
@@ -50,7 +74,7 @@ class Lay {
     orderBy(mapF) {
         if(this._grupo.length === 0) return new Lay(this._grupo);
         mapF = mapF === null ? this.defmapf : mapF;
-        if(typeof(this._grupo.map(mapF)[0]) === 'string') {
+        if(typeof(mapF(this._grupo[0])) === 'string') {
             let fin = this._grupo.toSorted((a,b) => mapF(a===null?'':a).localeCompare(mapF(b)));
             return new Lay(fin);
         }
@@ -62,7 +86,7 @@ class Lay {
     orderByDescending(mapF) {
         if(this._grupo.length === 0) return new Lay(this._grupo);
         mapF = mapF === null ? this.defmapf : mapF;
-        if(typeof(this._grupo.map(mapF)[0]) === 'string') {
+        if(typeof(mapF(this._grupo[0])) === 'string') {
             let fin = this._grupo.toSorted((b,a) => mapF(a===null?'':a).localeCompare(mapF(b)));
             return new Lay(fin);
         }
@@ -72,6 +96,7 @@ class Lay {
         }
     }
     last(f) {
+        if(this._grupo.length === 0) throw new Error('Empty list');
         if(f) {
             const filtered = this.filter(f);
             return filtered[filtered.length-1];
@@ -88,32 +113,39 @@ class Lay {
 
     groupBy(groupBy) {
         const listOfObjects = this._grupo;
-        const ungroupedKeys = listOfObjects.map(o => Object.values(groupBy(o)).join(','));
-        const keys = ungroupedKeys.filter((f, i) => ungroupedKeys.indexOf(f) === i);
-        const final = keys.map(key => {
-            let grupo = listOfObjects.filter(f => key === Object.values(groupBy(f)).join(','));
-            let chave = [grupo[0]].map(groupBy)[0];
-            let select = new Lay(grupo, chave);
-            return select;
-        });
+        const prefinal = {};
+        for(var item of listOfObjects) {
+            let key = Object.values(groupBy(item)).join(',');
+            if(!(key in prefinal)) prefinal[key] = [item];
+            else prefinal[key].push(item);
+        }
+
+        const final = [];
+        for(var key of Object.keys(prefinal)) {
+            final.push(new Lay(prefinal[key], groupBy(prefinal[key][0])))
+        }
+        
         return new Lay(final);
     }
 
     static group(listOfObjects, groupBy, selectField) {
-        const ungroupedKeys = listOfObjects.map(o => Object.values(groupBy(o)).join(','));
-        const keys = ungroupedKeys.filter((f, i) => ungroupedKeys.indexOf(f) === i);
-        selectField = selectField === null ? (v=>v.key) : selectField;
-        const final = keys.map(key => {
-            let grupo = listOfObjects.filter(f => key === Object.values(groupBy(f)).join(','));
-            let chave = [grupo[0]].map(groupBy)[0];
-            let select = new Lay(grupo, chave);
-            return { ...selectField(select) };
-        });
-        return final;
+        const prefinal = {};
+        for(var item of listOfObjects) {
+            let key = Object.values(groupBy(item)).join(',');
+            if(!(key in prefinal)) prefinal[key] = [item];
+            else prefinal[key].push(item);
+        }
+        
+        const final = [];
+        for(var key of Object.keys(prefinal)) {
+            final.push(new Lay(prefinal[key], groupBy(prefinal[key][0])))
+        }
+        
+        return new Lay(final).select(selectField).toList();
     }
 
     select(mapF) {
-        return new Lay(this._grupo.map(mapF));
+        return new Lay(this._map(this._grupo,mapF));
     }
 
     table() {
