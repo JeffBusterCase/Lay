@@ -21,7 +21,7 @@ table(
     .groupBy(g => ({AnoEscolar: g.AnoEscolar})) // or ´g => g.AnoEscolar´
     .select(s => ({
         AnoEscolar: s.key.AnoEscolar, // if ´g => g.AnoEcolar´, it would be ´s.key´
-        NotaMedia: s.avg(v => v.Nota)
+        NotaMedia: s.average(v => v.Nota)
     }))
     .toList()
 );
