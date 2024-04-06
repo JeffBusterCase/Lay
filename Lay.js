@@ -1,6 +1,6 @@
 class Lay {
     constructor(grupo,chave) {
-        this.key = {...chave};
+        this.key = typeof(chave) === 'object' || typeof(chave) === 'undefined' ? {...chave} : chave;
         this._grupo = grupo;
         this.defmapf = v => v;
     }
@@ -126,14 +126,16 @@ class Lay {
         const listOfObjects = this._grupo;
         const prefinal = {};
         for(var item of listOfObjects) {
-            let key = Object.values(groupBy(item)).join(',');
+            let grp = groupBy(item);
+            let key = typeof(grp) === 'object' ? Object.values(grp).join(',') : grp;
             if(!(key in prefinal)) prefinal[key] = [item];
             else prefinal[key].push(item);
         }
 
         const final = [];
         for(var key of Object.keys(prefinal)) {
-            final.push(new Lay(prefinal[key], groupBy(prefinal[key][0])))
+            let chave = groupBy(prefinal[key][0]);
+            final.push(new Lay(prefinal[key], chave))
         }
         
         return new Lay(final);
@@ -142,14 +144,16 @@ class Lay {
     static group(listOfObjects, groupBy, selectField) {
         const prefinal = {};
         for(var item of listOfObjects) {
-            let key = Object.values(groupBy(item)).join(',');
+            let grp = groupBy(item);
+            let key = typeof(grp) === 'object' ? Object.values(grp).join(',') : grp;
             if(!(key in prefinal)) prefinal[key] = [item];
             else prefinal[key].push(item);
         }
-        
+
         const final = [];
         for(var key of Object.keys(prefinal)) {
-            final.push(new Lay(prefinal[key], groupBy(prefinal[key][0])))
+            let chave = groupBy(prefinal[key][0]);
+            final.push(new Lay(prefinal[key], chave))
         }
         
         return new Lay(final).select(selectField).toList();
