@@ -5,8 +5,6 @@ It provides data manipulation easier and similar to how C# Linq syntax is.
 
 ### Usage
 ```javascript
-const table = console.table;
-
 const list = [
   {Id: 0, Nome: 'Jeff', Idade: 10, Sexo: 'M', Nota: 100.0, AnoEscolar: 8},
   {Id: 1, Nome: 'Bruno', Idade: 5, Sexo: 'M', Nota: 52.5, AnoEscolar: 7},
@@ -15,8 +13,8 @@ const list = [
   {Id: 4, Nome: 'Dakota', Idade: 17, Sexo: 'F', Nota: 85.5, AnoEscolar: 8},
 ];
 
-table(
-    new Lay(list)
+
+new Lay(list)
     .where(f => f.Sexo === 'M')
     .groupBy(g => ({AnoEscolar: g.AnoEscolar})) // or ´g => g.AnoEscolar´
     .select(s => ({
@@ -24,10 +22,14 @@ table(
         NotaMedia: s.average(v => v.Nota)
     }))
     .toList()
-);
-
+/*
+* => (2) [{…}, {…}]
+* =>  0: {AnoEscolar: 7, NotaMedia: 43.75}
+* =>  1: {AnoEscolar: 8, NotaMedia: 100}
+*/
 // Simple usage
-print(`Nota media ${new Lay(list).avg(v => v.Nota)}`)
+`Nota media ${new Lay(list).avg(v => v.Nota)}`
+// => 'Nota media 56.5'
 ```
 
 ## Supported functions
