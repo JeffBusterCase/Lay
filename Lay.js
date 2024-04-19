@@ -35,7 +35,7 @@ class Lay {
     }
     sum(mapF) {
         mapF = mapF === null ? this.defmapf : mapF;
-        return this._map(this._grupo, mapF).reduce((a,v) => a+=v);
+        return this._map(this._grupo, mapF).concat([0]).reduce((a,v) => a+=v);
     }
     min(mapF) {
         if(this._grupo.length === 0) throw new Error('Empty list');
